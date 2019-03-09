@@ -82,6 +82,7 @@ class App extends Component {
         style={{ height: "100vh", width: "100%", position: "relative" }}
       >
         <GuiWrapper
+          className="w50"
           answered={answered}
           city={city}
           handleSubmit={this.handleSubmit}
