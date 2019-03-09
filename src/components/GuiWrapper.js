@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 
 const GuiWrapper = ({ city, handleSubmit, answered, className, disabled, finished, resetState }) => (
   <div
