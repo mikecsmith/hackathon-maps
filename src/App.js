@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { API_KEY } from 'utils/key';
+import { API_KEY } from './utils/key';
 import { Map, GoogleApiWrapper } from 'google-maps-react';
 
 class App extends Component {
