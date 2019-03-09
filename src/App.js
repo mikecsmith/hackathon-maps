@@ -52,7 +52,7 @@ class App extends Component {
     
     let correct = false;
 
-    if (distance < 200) {
+    if (distance < 20) {
       correct = true;
     }
 
@@ -131,7 +131,7 @@ class App extends Component {
             <Marker position={currentMarker} />
           )}
           {answered.map(answer => (
-            <Marker name={answer.city} position={answer.coords} icon={{url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"}} />
+            <Marker key={answer.city} name={answer.city} position={answer.coords} icon={{url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"}} />
           ))}
         </Map>
       </div>
