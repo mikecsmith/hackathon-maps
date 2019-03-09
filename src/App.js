@@ -10,18 +10,28 @@ import "normalize.css";
 import "tachyons/css/tachyons.css";
 
 class App extends Component {
-  state = {
-    currentMarker: {},
-    currentCity: { ...CITIES[0], index: 0 },
-    cities: CITIES,
-    answered: [],
-    finished: false
-  };
+  constructor() {
+    super()
+    this.initialState = {
+      currentMarker: {},
+      disabled: true,
+      currentCity: { ...CITIES[0], index: 0 },
+      cities: CITIES,
+      answered: [],
+      finished: false
+    }
+    this.state = {...this.initialState}
+  }
+
+  resetState = () => {
+    this.setState(this.initialState)
+  }
 
   mapClicked = (mapProps, map, clickEvent) => {
     const clickLocation = clickEvent.latLng.toJSON();
     this.setState({
-      currentMarker: clickLocation
+      currentMarker: clickLocation,
+      disabled: false
     });
   };
 
@@ -39,6 +49,12 @@ class App extends Component {
     );
 
     let finished = false;
+    
+    let correct = false;
+
+    if (distance < 200) {
+      correct = true;
+    }
 
     if (answered.length === cities.length - 1) {
       finished = true;
@@ -52,7 +68,8 @@ class App extends Component {
           {
             city: currentCity.city,
             coords: currentMarker,
-            distance
+            distance,
+            correct
           }
         ],
         currentCity: {
@@ -60,7 +77,8 @@ class App extends Component {
           index: currentCity.index + 1
         },
         currentMarker: {},
-        finished: finished
+        finished: finished,
+        disabled: true
       };
     });
   };
@@ -69,7 +87,8 @@ class App extends Component {
     const {
       answered,
       currentCity: { city },
-      finished
+      finished,
+      currentMarker
     } = this.state;
     const GlobalStyle = createGlobalStyle`
     html, body {
@@ -91,6 +110,8 @@ class App extends Component {
           city={city}
           handleSubmit={this.handleSubmit}
           finished={finished}
+          disabled={this.state.disabled}
+          resetState={this.resetState}
         />
         <GlobalStyle />
         <Map
@@ -106,8 +127,8 @@ class App extends Component {
           onClick={this.mapClicked}
           styles={mapStyles}
         >
-          {this.state.currentMarker === {} ? null : (
-            <Marker position={this.state.currentMarker} />
+          {currentMarker === {} ? null : (
+            <Marker position={currentMarker} />
           )}
           {answered.map(answer => (
             <Marker
