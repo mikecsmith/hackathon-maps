@@ -56,7 +56,7 @@ class App extends Component {
       correct = true;
     }
 
-    if (answered.length === cities.length-1) {
+    if (answered.length === cities.length - 1) {
       finished = true;
     }
 
@@ -105,7 +105,7 @@ class App extends Component {
         style={{ height: "100vh", width: "100%", position: "relative" }}
       >
         <GuiWrapper
-          className="w50"
+          className="w100"
           answered={answered}
           city={city}
           handleSubmit={this.handleSubmit}
@@ -131,7 +131,7 @@ class App extends Component {
             <Marker position={currentMarker} />
           )}
           {answered.map(answer => (
-            <Marker key={answer.city} name={answer.city} position={answer.coords} icon={{url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"}} />
+            <Marker key={answer.city} name={answer.city} position={answer.coords} icon={{url: "https://res.cloudinary.com/makingthings/image/upload/v1552150520/flag_fc9ztt.png"}} />
           ))}
         </Map>
       </div>
