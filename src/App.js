@@ -5,17 +5,17 @@ import { getDistanceFromLatLonInKm } from "./utils/getDistanceFromLatLonInKm";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { mapStyles } from "./theme/mapStyles";
 import { createGlobalStyle } from "styled-components";
-import GuiWrapper from './components/GuiWrapper';
+import GuiWrapper from "./components/GuiWrapper";
 import "normalize.css";
 import "tachyons/css/tachyons.css";
 
 class App extends Component {
   state = {
     currentMarker: {},
-    currentCity: { ...CITIES[0], index: 0},
+    currentCity: { ...CITIES[0], index: 0 },
     cities: CITIES,
     answered: []
-  }
+  };
 
   mapClicked = (mapProps, map, clickEvent) => {
     const clickLocation = clickEvent.latLng.toJSON();
@@ -25,13 +25,20 @@ class App extends Component {
   };
 
   handleSubmit = () => {
-    const {currentMarker, currentCity, answered, cities } = this.state
-    const { lat: clickedLat, lng: clickedLong } = currentMarker
-    const { lat: currentLat, lng: currentLong } = currentCity
-    let distance = Math.round(getDistanceFromLatLonInKm(clickedLat, clickedLong, currentLat, currentLong));
+    const { currentMarker, currentCity, answered, cities } = this.state;
+    const { lat: clickedLat, lng: clickedLong } = currentMarker;
+    const { lat: currentLat, lng: currentLong } = currentCity;
+    let distance = Math.round(
+      getDistanceFromLatLonInKm(
+        clickedLat,
+        clickedLong,
+        currentLat,
+        currentLong
+      )
+    );
 
     this.setState(prevState => {
-      const {currentMarker, currentCity, answered } = prevState
+      const { currentMarker, currentCity, answered } = prevState;
       return {
         answered: [
           ...answered,
@@ -41,9 +48,12 @@ class App extends Component {
             distance
           }
         ],
-        currentCity: {...CITIES[currentCity.index + 1], index: currentCity.index + 1}
-      }
-    })
+        currentCity: {
+          ...CITIES[currentCity.index + 1],
+          index: currentCity.index + 1
+        }
+      };
+    });
 
     if (cities.length === answered.length) {
       alert(`Final city! You were within: ${distance}KM`);
@@ -52,9 +62,11 @@ class App extends Component {
     }
   };
 
-
   render() {
-    const { answered, currentCity: { city } } = this.state
+    const {
+      answered,
+      currentCity: { city }
+    } = this.state;
     const GlobalStyle = createGlobalStyle`
     html, body {
       width: 100%;
@@ -63,13 +75,17 @@ class App extends Component {
       font-family: 'IBM Plex Mono'
     }
   `;
-  
+
     return (
       <div
         className="App"
         style={{ height: "100vh", width: "100%", position: "relative" }}
       >
-        <GuiWrapper city={city} handleSubmit={this.handleSubmit}/>
+        <GuiWrapper
+          answered={answered}
+          city={city}
+          handleSubmit={this.handleSubmit}
+        />
         <GlobalStyle />
         <Map
           zoomControl={false}
@@ -87,7 +103,9 @@ class App extends Component {
           {this.state.currentMarker === {} ? null : (
             <Marker position={this.state.currentMarker} />
           )}
-          { answered.map( answer => <Marker name={answer.city} position={answer.coords} /> )}
+          {answered.map(answer => (
+            <Marker name={answer.city} position={answer.coords} />
+          ))}
         </Map>
       </div>
     );
