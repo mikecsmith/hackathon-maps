@@ -24,9 +24,10 @@ const GuiWrapper = ({ city, handleSubmit, answered, className, disabled, finishe
     <ul className="w25 pa3">
       {answered.map(answer => (
         <li className="pl0 ml0 list green bb b--green mv2" key={answer.city}>
-          {answer.city}: {answer.distance}km from target
+          {answer.city}: {answer.distance}km from target. {answer.correct ? 'YAY :)' : 'You suck!'}
         </li>
       ))}
+      { finished ? `You scored: ${answered.map( answer => answer.correct ).reduce( (accumulator, correct) => correct ? accumulator + 1 : accumulator, 0 )}` : null }
     </ul>
   </div>
 );

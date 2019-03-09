@@ -49,6 +49,12 @@ class App extends Component {
     );
 
     let finished = false;
+    
+    let correct = false;
+
+    if (distance < 200) {
+      correct = true;
+    }
 
     if (answered.length === cities.length-1) {
       finished = true;
@@ -62,7 +68,8 @@ class App extends Component {
           {
             city: currentCity.city,
             coords: currentMarker,
-            distance
+            distance,
+            correct
           }
         ],
         currentCity: {
