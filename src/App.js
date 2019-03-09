@@ -8,8 +8,9 @@ import { mapStyles } from "./theme/mapStyles"
 class App extends Component {
   state = {
     currentMarker: {},
-    currentCity: CITIES[0],
-    cities: CITIES
+    currentCity: { ...CITIES[0], index: 0},
+    cities: CITIES,
+    answered: []
   }
 
   mapClicked = (mapProps, map, clickEvent) => {
@@ -20,16 +21,42 @@ class App extends Component {
   }
 
   handleSubmit = () => {
-    const { lat: clickedLat, lng: clickedLong } = this.state.currentMarker
-    const { lat: currentLat, lng: currentLong } = this.state.currentCity
-    let distance = getDistanceFromLatLonInKm(clickedLat, clickedLong, currentLat, currentLong);
-    alert(`You were within: ${Math.round(distance)}KM`);
-  }
+    const {currentMarker, currentCity, answered, cities } = this.state
+    const { lat: clickedLat, lng: clickedLong } = currentMarker
+    const { lat: currentLat, lng: currentLong } = currentCity
+    let distance = Math.round(getDistanceFromLatLonInKm(clickedLat, clickedLong, currentLat, currentLong));
+
+    this.setState(prevState => {
+      const {currentMarker, currentCity, answered } = prevState
+      return {
+        answered: [
+          ...answered,
+          {
+            city: currentCity.city,
+            coords: currentMarker,
+            distance
+          }
+        ],
+        currentCity: {...CITIES[currentCity.index + 1], index: currentCity.index + 1}
+      }
+    })
+
+    if (cities.length === answered.length) {
+      alert(`Final city! You were within: ${distance}KM`);
+    } else {
+      alert(`You were within: ${distance}KM`);
+    }
+  };
 
   render() {
+    const {currentMarker, answered } = this.state
     return (
-      <div className="App" style={{ height: '100vh', width: '100%' }}>
-        <div style={{height: "80%", position: "relative"}}>
+      <div className="App" style={{ height: '98vh', width: '100%' }}>
+        <div style={{height: "100px"}}>
+          <p>Where is {this.state.currentCity.city}?</p>
+          <button onClick={this.handleSubmit}>Submit</button>
+        </div>
+        <div style={{height: "calc(100vh - 120px)", position: "relative"}}>
           <Map
             zoomControl={false}
             streetViewControl={false}
@@ -43,12 +70,11 @@ class App extends Component {
             onClick={this.mapClicked}
             styles={mapStyles}
           >
-          { this.state.currentMarker === {} ? null : <Marker position={this.state.currentMarker} />}
+          { currentMarker === {} ? null : <Marker position={currentMarker} />}
+          { answered.map( answer => <Marker name={answer.city} position={answer.coords} /> )}
           </Map>
         </div>
-        <div style={{height: "30px"}}>
-          <button onClick={this.handleSubmit}>Submit</button>
-        </div>
+
       </div>
     );
   }
