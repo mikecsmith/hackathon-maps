@@ -16,8 +16,8 @@ export const CITIES = [
   },
   {
     city: "Cardif",
-    lat: 51.481312,
-    lng: -1.40323
+    lat: 51.48131,
+    lng: -3.1805
   },
   {
     city: "Norwich",
