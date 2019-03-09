@@ -1,18 +1,38 @@
 import React, { Component } from "react";
+import { CITIES } from "./data/cities";
 import { API_KEY } from "./utils/key";
-import { Map, GoogleApiWrapper } from "google-maps-react";
+import { getDistanceFromLatLonInKm } from "./utils/getDistanceFromLatLonInKm";
+import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { mapStyles } from "./theme/mapStyles";
 import styled, { createGlobalStyle } from "styled-components";
 import "normalize.css";
 import "tachyons/css/tachyons.css";
 
 class App extends Component {
-  mapClicked(mapProps, map, clickEvent) {
-    console.log("mapProps", mapProps);
-    console.log("map", map);
-    console.log("clickEvent", clickEvent);
-    console.log("clickEvent", clickEvent.latLng.toJSON());
-  }
+  state = {
+    currentMarker: {},
+    currentCity: CITIES[0],
+    cities: CITIES
+  };
+
+  mapClicked = (mapProps, map, clickEvent) => {
+    const clickLocation = clickEvent.latLng.toJSON();
+    this.setState({
+      currentMarker: clickLocation
+    });
+  };
+
+  handleSubmit = () => {
+    const { lat: clickedLat, lng: clickedLong } = this.state.currentMarker;
+    const { lat: currentLat, lng: currentLong } = this.state.currentCity;
+    let distance = getDistanceFromLatLonInKm(
+      clickedLat,
+      clickedLong,
+      currentLat,
+      currentLong
+    );
+    alert(`You were within: ${Math.round(distance)}KM`);
+  };
 
   render() {
     const GlobalStyle = createGlobalStyle`
@@ -53,7 +73,11 @@ class App extends Component {
           }}
           onClick={this.mapClicked}
           styles={mapStyles}
-        />
+        >
+          {this.state.currentMarker === {} ? null : (
+            <Marker position={this.state.currentMarker} />
+          )}
+        </Map>
       </div>
     );
   }

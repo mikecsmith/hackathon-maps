@@ -1,4 +1,4 @@
-const cities = [
+export const CITIES = [
   {
     city: "London",
     lat: 51.507351,
