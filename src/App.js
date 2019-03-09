@@ -3,6 +3,7 @@ import { CITIES } from './data/cities'
 import { API_KEY } from './utils/key';
 import { getDistanceFromLatLonInKm } from './utils/getDistanceFromLatLonInKm'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
+import { mapStyles } from "./theme/mapStyles"
 
 class App extends Component {
   state = {
@@ -10,8 +11,6 @@ class App extends Component {
     currentCity: CITIES[0],
     cities: CITIES
   }
-
-  
 
   mapClicked = (mapProps, map, clickEvent) => {
     const clickLocation = clickEvent.latLng.toJSON()
@@ -24,20 +23,25 @@ class App extends Component {
     const { lat: clickedLat, lng: clickedLong } = this.state.currentMarker
     const { lat: currentLat, lng: currentLong } = this.state.currentCity
     let distance = getDistanceFromLatLonInKm(clickedLat, clickedLong, currentLat, currentLong);
-    alert(distance);
+    alert(`You were within: ${Math.round(distance)}KM`);
   }
 
   render() {
     return (
       <div className="App" style={{ height: '100vh', width: '100%' }}>
         <div style={{height: "80%", position: "relative"}}>
-          <Map google={this.props.google} zoom={6} initialCenter={{
+          <Map
+            zoomControl={false}
+            streetViewControl={false}
+            mapTypeControl={false}
+            google={this.props.google}
+            zoom={6}
+            initialCenter={{
               lat: 53.8008,
               lng: -1.54
             }}
-            style={{height: "100%"}}
-            styles={styles}
             onClick={this.mapClicked}
+            styles={mapStyles}
           >
           { this.state.currentMarker === {} ? null : <Marker position={this.state.currentMarker} />}
           </Map>
@@ -50,27 +54,4 @@ class App extends Component {
   }
 }
 
-const styles = [
-  {
-    "featureType": "road",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
-    "elementType": "labels",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-  },
-  {
-    "featureType": "administrative.locality",
-    "elementType": "labels",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-  }
-]
-
-export default GoogleApiWrapper({apiKey: API_KEY, styles: styles})(App);
+export default GoogleApiWrapper({ apiKey: API_KEY })(App);
