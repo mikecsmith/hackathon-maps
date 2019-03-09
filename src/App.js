@@ -14,7 +14,8 @@ class App extends Component {
     currentMarker: {},
     currentCity: { ...CITIES[0], index: 0 },
     cities: CITIES,
-    answered: []
+    answered: [],
+    finished: false
   };
 
   mapClicked = (mapProps, map, clickEvent) => {
@@ -37,6 +38,12 @@ class App extends Component {
       )
     );
 
+    let finished = false;
+
+    if (answered.length === cities.length-1) {
+      finished = true;
+    }
+
     this.setState(prevState => {
       const { currentMarker, currentCity, answered } = prevState;
       return {
@@ -51,21 +58,18 @@ class App extends Component {
         currentCity: {
           ...CITIES[currentCity.index + 1],
           index: currentCity.index + 1
-        }
+        },
+        currentMarker: {},
+        finished: finished
       };
     });
-
-    if (cities.length === answered.length) {
-      alert(`Final city! You were within: ${distance}KM`);
-    } else {
-      alert(`You were within: ${distance}KM`);
-    }
   };
 
   render() {
     const {
       answered,
-      currentCity: { city }
+      currentCity: { city },
+      finished
     } = this.state;
     const GlobalStyle = createGlobalStyle`
     html, body {
@@ -85,6 +89,7 @@ class App extends Component {
           answered={answered}
           city={city}
           handleSubmit={this.handleSubmit}
+          finished={finished}
         />
         <GlobalStyle />
         <Map
@@ -104,7 +109,7 @@ class App extends Component {
             <Marker position={this.state.currentMarker} />
           )}
           {answered.map(answer => (
-            <Marker name={answer.city} position={answer.coords} />
+            <Marker name={answer.city} position={answer.coords} icon={{url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"}} />
           ))}
         </Map>
       </div>
