@@ -3,9 +3,9 @@ import styled from "styled-components";
 
 const GuiWrapper = ({ city, handleSubmit, answered, className }) => (
   <div
-    className={`${className} flex flex-column absolute top0 left0 z-1 ma2 w50`}
+    className={`${className} flex flex-column absolute top0 left0 z-1 ma2 w100`}
   >
-    <div className="flex ">
+    <div className="flex w100">
       <div className="bg-green white pa3 z-1">
         Where the @*!!! is {city}?
         <button
