@@ -4,7 +4,8 @@ import { API_KEY } from "./utils/key";
 import { getDistanceFromLatLonInKm } from "./utils/getDistanceFromLatLonInKm";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { mapStyles } from "./theme/mapStyles";
-import styled, { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
+import GuiWrapper from './components/GuiWrapper';
 import "normalize.css";
 import "tachyons/css/tachyons.css";
 
@@ -50,34 +51,25 @@ class App extends Component {
       alert(`You were within: ${distance}KM`);
     }
   };
+
+
   render() {
-    const { answered } = this.state
+    const { answered, currentCity: { city } } = this.state
     const GlobalStyle = createGlobalStyle`
     html, body {
       width: 100%;
       height: 100%;
       @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono');
-      font-family: 'IBM Plex Mono'    
+      font-family: 'IBM Plex Mono'
     }
   `;
-
-    const Gui = styled.div.attrs({
-      className: "flex absolute top0 left0 absolute top0 z-1"
-    })``;
-    const Results = styled.div.attrs({
-      className: "h50 bg-green w50 white ma2 pa3 z-1 "
-    })``;
-
+  
     return (
       <div
         className="App"
         style={{ height: "100vh", width: "100%", position: "relative" }}
       >
-        <Gui>
-          <Results>Where the @*!!! is London?</Results>
-          <button onClick={this.handleSubmit}>Submit</button>
-        </Gui>
-
+        <GuiWrapper city={city} handleSubmit={this.handleSubmit}/>
         <GlobalStyle />
         <Map
           zoomControl={false}
@@ -97,7 +89,6 @@ class App extends Component {
           )}
           { answered.map( answer => <Marker name={answer.city} position={answer.coords} /> )}
         </Map>
-
       </div>
     );
   }
